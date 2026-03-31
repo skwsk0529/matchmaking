@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>相性診断 | 結婚相談所</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>✦ 星占い相性診断 ✦</h1>
+      <p class="subtitle">お二人の生年月日と生まれた時間から、星占いで相性を診断します</p>
+    </header>
+
+    {% if errors %}
+    <div class="error-box">
+      <ul>
+        {% for e in errors %}<li>{{ e }}</li>{% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
+    <form action="/result" method="post">
+      <div class="persons-row">
+
+        <!-- 求婚者 A -->
+        <div class="person-card card-a">
+          <h2>求婚者 A</h2>
+          <div class="field">
+            <label>お名前</label>
+            <input type="text" name="name_a" placeholder="山田 太郎"
+                   value="{{ name_a or '' }}">
+          </div>
+          <div class="field">
+            <label>生年月日 <span class="hint">8桁の数字</span></label>
+            <input type="text" name="date_a" placeholder="19940529"
+                   maxlength="8" inputmode="numeric" pattern="\d{8}"
+                   value="{{ date_a or '' }}" required>
+          </div>
+          <div class="field">
+            <label>生まれた時間 <span class="hint">HH:MM</span></label>
+            <input type="time" name="time_a"
+                   value="{{ time_a or '' }}" required>
+          </div>
+        </div>
+
+        <div class="vs-divider">VS</div>
+
+        <!-- 求婚者 B -->
+        <div class="person-card card-b">
+          <h2>求婚者 B</h2>
+          <div class="field">
+            <label>お名前</label>
+            <input type="text" name="name_b" placeholder="鈴木 花子"
+                   value="{{ name_b or '' }}">
+          </div>
+          <div class="field">
+            <label>生年月日 <span class="hint">8桁の数字</span></label>
+            <input type="text" name="date_b" placeholder="19961015"
+                   maxlength="8" inputmode="numeric" pattern="\d{8}"
+                   value="{{ date_b or '' }}" required>
+          </div>
+          <div class="field">
+            <label>生まれた時間 <span class="hint">HH:MM</span></label>
+            <input type="time" name="time_b"
+                   value="{{ time_b or '' }}" required>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="submit-wrap">
+        <button type="submit" class="btn-submit">相性を診断する ✦</button>
+      </div>
+    </form>
+
+    <p class="disclaimer">
+      ※ 本診断は占星術に基づくエンターテインメントです。実際の相性はお二人のご縁と努力によって決まります。
+    </p>
+  </div>
+</body>
+</html>

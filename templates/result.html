@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>相性診断結果 | 結婚相談所</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>✦ 診断結果 ✦</h1>
+      <p class="subtitle">{{ name_a }}さん ＆ {{ name_b }}さん</p>
+    </header>
+
+    <!-- スコア -->
+    <div class="score-card">
+      <div class="score-circle">
+        <span class="score-number">{{ score }}</span>
+        <span class="score-unit">点</span>
+      </div>
+      <div class="score-label level-{{ score }}">
+        相性レベル：<strong>{{ level }}</strong>
+      </div>
+      <!-- スコアバー -->
+      <div class="score-bar-wrap">
+        <div class="score-bar" style="width: {{ score }}%;
+          background: {% if score >= 85 %}#e91e8c{% elif score >= 70 %}#7b5ea7{% elif score >= 55 %}#3a86c8{% else %}#888{% endif %};">
+        </div>
+      </div>
+    </div>
+
+    <!-- 星座情報 -->
+    <div class="signs-row">
+      <div class="sign-card">
+        <h3>{{ name_a }}さん</h3>
+        <table class="sign-table">
+          <tr><th>太陽星座</th><td>{{ signs.A.sun or '—' }}</td></tr>
+          <tr><th>月星座</th><td>{{ signs.A.moon or '—' }}</td></tr>
+          <tr><th>金星</th><td>{{ signs.A.venus or '—' }}</td></tr>
+          <tr><th>火星</th><td>{{ signs.A.mars or '—' }}</td></tr>
+          <tr><th>アセンダント</th><td>{{ signs.A.ascendant or '—' }}</td></tr>
+        </table>
+      </div>
+      <div class="sign-divider">✦</div>
+      <div class="sign-card">
+        <h3>{{ name_b }}さん</h3>
+        <table class="sign-table">
+          <tr><th>太陽星座</th><td>{{ signs.B.sun or '—' }}</td></tr>
+          <tr><th>月星座</th><td>{{ signs.B.moon or '—' }}</td></tr>
+          <tr><th>金星</th><td>{{ signs.B.venus or '—' }}</td></tr>
+          <tr><th>火星</th><td>{{ signs.B.mars or '—' }}</td></tr>
+          <tr><th>アセンダント</th><td>{{ signs.B.ascendant or '—' }}</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- 項目別スコア -->
+    <div class="detail-section">
+      <h2 class="section-title">項目別スコア</h2>
+      {% for label, s in scores.items() %}
+      <div class="detail-row">
+        <span class="detail-label">{{ label }}</span>
+        <div class="detail-bar-wrap">
+          <div class="detail-bar" style="width: {{ s }}%;
+            background: {% if s >= 80 %}#e91e8c{% elif s >= 60 %}#7b5ea7{% else %}#aaa{% endif %};">
+          </div>
+        </div>
+        <span class="detail-score">{{ s }}点</span>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- 総合コメント -->
+    <div class="comment-section">
+      <h2 class="section-title">総合コメント</h2>
+      <p class="comment-text">{{ comment }}</p>
+    </div>
+
+    <!-- 成婚アドバイス -->
+    {% if advice_list %}
+    <div class="advice-section">
+      <h2 class="advice-heading">✦ 成婚に向けたアドバイス ✦</h2>
+      {% for block in advice_list %}
+      <div class="advice-block">
+        <h3 class="advice-block-title">{{ loop.index }}. {{ block.title }}</h3>
+        <ul class="advice-items">
+          {% for item in block['items'] %}
+          <li class="advice-item">{{ item }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="back-wrap">
+      <a href="/" class="btn-back">← もう一度診断する</a>
+    </div>
+
+    <p class="disclaimer">
+      ※ 本診断は占星術に基づくエンターテインメントです。実際の相性はお二人のご縁と努力によって決まります。
+    </p>
+  </div>
+</body>
+</html>
