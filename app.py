@@ -321,31 +321,24 @@ def index():
 def result():
     name_a = request.form.get("name_a", "").strip() or "Aさん"
     date_a = request.form.get("date_a", "").strip()
-    time_a = request.form.get("time_a", "").strip()
+    time_a = "12:00"
 
     name_b = request.form.get("name_b", "").strip() or "Bさん"
     date_b = request.form.get("date_b", "").strip()
-    time_b = request.form.get("time_b", "").strip()
+    time_b = "12:00"
 
     errors = []
-    for label, val, kind in [
-        (f"{name_a}の生年月日", date_a, "date"),
-        (f"{name_a}の生まれた時間", time_a, "time"),
-        (f"{name_b}の生年月日", date_b, "date"),
-        (f"{name_b}の生まれた時間", time_b, "time"),
+    for label, val in [
+        (f"{name_a}の生年月日", date_a),
+        (f"{name_b}の生年月日", date_b),
     ]:
-        if kind == "date" and (len(val) != 8 or not val.isdigit()):
+        if len(val) != 8 or not val.isdigit():
             errors.append(f"{label}は8桁の数字で入力してください（例：19940529）")
-        if kind == "time":
-            try:
-                datetime.strptime(val, "%H:%M")
-            except ValueError:
-                errors.append(f"{label}はHH:MM形式で入力してください（例：07:46）")
 
     if errors:
         return render_template("index.html", errors=errors,
-                               name_a=name_a, date_a=date_a, time_a=time_a,
-                               name_b=name_b, date_b=date_b, time_b=time_b)
+                               name_a=name_a, date_a=date_a,
+                               name_b=name_b, date_b=date_b)
 
     try:
         chart_a = get_natal_chart(name_a, date_a, time_a)
@@ -353,8 +346,8 @@ def result():
     except requests.exceptions.RequestException as e:
         return render_template("index.html",
                                errors=[f"APIエラーが発生しました: {e}"],
-                               name_a=name_a, date_a=date_a, time_a=time_a,
-                               name_b=name_b, date_b=date_b, time_b=time_b)
+                               name_a=name_a, date_a=date_a,
+                               name_b=name_b, date_b=date_b)
 
     score, scores, signs = calc_compatibility(chart_a, chart_b)
     level, comment      = generate_comment(score, signs, name_a, name_b)
